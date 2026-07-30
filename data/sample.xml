@@ -1,0 +1,36 @@
+<mediawiki>
+  <page>
+    <title>Python</title>
+    <revision>
+      <id>101</id>
+      <timestamp>2026-07-01T10:15:00Z</timestamp>
+      <contributor>
+        <username>Alice</username>
+      </contributor>
+      <comment>Initial edit</comment>
+      <sha1>abc123</sha1>
+    </revision>
+    <revision>
+      <id>102</id>
+      <timestamp>2026-07-01T11:20:00Z</timestamp>
+      <contributor>
+        <username>Bob</username>
+      </contributor>
+      <comment>Reverted vandalism</comment>
+      <sha1>def456</sha1>
+    </revision>
+  </page>
+
+  <page>
+    <title>Apache Spark</title>
+    <revision>
+      <id>201</id>
+      <timestamp>2026-07-02T09:30:00Z</timestamp>
+      <contributor>
+        <username>Charlie</username>
+      </contributor>
+      <comment>Added examples</comment>
+      <sha1>ghi789</sha1>
+    </revision>
+  </page>
+</mediawiki>
