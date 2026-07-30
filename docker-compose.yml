@@ -1,0 +1,17 @@
+services:
+
+  wikipediaanalytics:
+
+    build: .
+
+    container_name: wikipediaanalytics
+
+    volumes:
+      - ./app:/app/app
+      - ./data:/data
+      - ./output:/output
+
+    env_file:
+      - .env.example
+
+    command: ./run.sh
