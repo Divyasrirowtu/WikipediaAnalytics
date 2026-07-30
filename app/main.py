@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 from spark_session import create_spark_session
 from ingestion import read_wikipedia_xml
+from transform import transform_wikipedia_data
 
 
 def main():
@@ -13,13 +14,26 @@ def main():
 
     input_path = os.getenv("INPUT_PATH")
 
-    df = read_wikipedia_xml(spark, input_path)
+    raw_df = read_wikipedia_xml(
+        spark,
+        input_path
+    )
 
-    print("\n===== SCHEMA =====")
-    df.printSchema()
+    transformed_df = transform_wikipedia_data(raw_df)
 
-    print("\n===== SAMPLE DATA =====")
-    df.show(5, truncate=False)
+    print("\n==============================")
+    print("TRANSFORMED SCHEMA")
+    print("==============================")
+
+    transformed_df.printSchema()
+
+    print("\n==============================")
+    print("TRANSFORMED DATA")
+    print("==============================")
+
+    transformed_df.show(
+        truncate=False
+    )
 
     spark.stop()
 
