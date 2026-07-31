@@ -22,40 +22,40 @@ def main():
     input_path = os.getenv("INPUT_PATH")
     output_path = os.getenv("OUTPUT_PATH")
 
-    # Read XML
+    print("=" * 70)
+    print("WIKIPEDIA ANALYTICS PIPELINE")
+    print("=" * 70)
+
+    print("\nReading Wikipedia XML...")
+
     raw_df = read_wikipedia_xml(
         spark,
         input_path
     )
 
-    # Transform Data
-    transformed_df = transform_wikipedia_data(
-        raw_df
-    )
+    print("XML Loaded Successfully")
 
-    print("=" * 60)
-    print("TRANSFORMED DATA")
-    print("=" * 60)
+    print("\nTransforming Data...")
 
-    transformed_df.show(
-        truncate=False
-    )
+    transformed_df = transform_wikipedia_data(raw_df)
 
-    # ------------------------------------
+    print("Transformation Completed")
+
+    print("\nTotal Records")
+
+    print(transformed_df.count())
+
+    transformed_df.show(10, truncate=False)
+
+    # ---------------------------------------
     # Analysis 1
-    # ------------------------------------
+    # ---------------------------------------
 
-    edit_volume_df = edit_volume_per_hour(
-        transformed_df
-    )
+    print("\nRunning Analysis 1...")
 
-    print("=" * 60)
-    print("EDIT VOLUME PER ARTICLE PER HOUR")
-    print("=" * 60)
+    edit_volume_df = edit_volume_per_hour(transformed_df)
 
-    edit_volume_df.show(
-        truncate=False
-    )
+    edit_volume_df.show(truncate=False)
 
     (
         edit_volume_df.write
@@ -66,21 +66,19 @@ def main():
         )
     )
 
-    # ------------------------------------
+    print("Edit Volume Written")
+
+    # ---------------------------------------
     # Analysis 2
-    # ------------------------------------
+    # ---------------------------------------
+
+    print("\nRunning Analysis 2...")
 
     revert_rate_df = revert_rate_per_editor(
         transformed_df
     )
 
-    print("=" * 60)
-    print("REVERT RATE PER EDITOR")
-    print("=" * 60)
-
-    revert_rate_df.show(
-        truncate=False
-    )
+    revert_rate_df.show(truncate=False)
 
     (
         revert_rate_df.write
@@ -91,21 +89,19 @@ def main():
         )
     )
 
-    # ------------------------------------
+    print("Revert Rate Written")
+
+    # ---------------------------------------
     # Analysis 3
-    # ------------------------------------
+    # ---------------------------------------
+
+    print("\nRunning Analysis 3...")
 
     contested_df = contested_articles(
         transformed_df
     )
 
-    print("=" * 60)
-    print("TOP 100 MOST-CONTESTED ARTICLES")
-    print("=" * 60)
-
-    contested_df.show(
-        truncate=False
-    )
+    contested_df.show(truncate=False)
 
     (
         contested_df.write
@@ -116,9 +112,16 @@ def main():
         )
     )
 
-    print("=" * 60)
-    print("ALL ANALYSES COMPLETED SUCCESSFULLY")
-    print("=" * 60)
+    print("Contested Articles Written")
+
+    print("\n")
+    print("=" * 70)
+    print("PIPELINE EXECUTED SUCCESSFULLY")
+    print("=" * 70)
+
+    print("\nOutput Location")
+
+    print(output_path)
 
     spark.stop()
 
