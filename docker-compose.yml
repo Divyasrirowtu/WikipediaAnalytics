@@ -1,5 +1,4 @@
 services:
-
   wikipediaanalytics:
 
     build: .
@@ -10,8 +9,11 @@ services:
       - ./app:/app/app
       - ./data:/data
       - ./output:/output
+      - ./logs:/logs
 
     env_file:
       - .env.example
 
     command: ./run.sh
+
+    restart: "no"
