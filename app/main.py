@@ -1,9 +1,11 @@
 import os
+
 from dotenv import load_dotenv
 
 from spark_session import create_spark_session
 from ingestion import read_wikipedia_xml
 from transform import transform_wikipedia_data
+from analysis import edit_volume_per_hour
 
 
 def main():
@@ -13,6 +15,7 @@ def main():
     spark = create_spark_session()
 
     input_path = os.getenv("INPUT_PATH")
+    output_path = os.getenv("OUTPUT_PATH")
 
     raw_df = read_wikipedia_xml(
         spark,
@@ -21,19 +24,28 @@ def main():
 
     transformed_df = transform_wikipedia_data(raw_df)
 
-    print("\n==============================")
-    print("TRANSFORMED SCHEMA")
-    print("==============================")
+    edit_volume_df = edit_volume_per_hour(
+        transformed_df
+    )
 
-    transformed_df.printSchema()
+    print("=" * 60)
+    print("EDIT VOLUME PER ARTICLE PER HOUR")
+    print("=" * 60)
 
-    print("\n==============================")
-    print("TRANSFORMED DATA")
-    print("==============================")
-
-    transformed_df.show(
+    edit_volume_df.show(
         truncate=False
     )
+
+    (
+        edit_volume_df.write
+        .mode("overwrite")
+        .partitionBy("date")
+        .parquet(
+            f"{output_path}/edit_volume.parquet"
+        )
+    )
+
+    print("\nEdit volume analysis completed successfully.")
 
     spark.stop()
 
